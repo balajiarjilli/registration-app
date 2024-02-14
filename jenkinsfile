@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        jdk 'jdk17'
+		maven 'maven3'
+    }
+
+    stages {
+		stage('Cleanup workspace') {
+			steps {
+				cleanWs()
+			}	
+		}
+		
+		stage('checkout from workspace') {
+			steps {
+				git changelog: false, credentialsId: 'github-cred', poll: false, url: 'https://github.com/balajiarjilli/registration-app.git'
+			}	
+		}
+		
+		stage('Build Application') {
+			steps {
+				sh 'mvn clean package'
+			}	
+		}
+		
+		stage('Test Application') {
+			steps {
+				sh 'mvn clean package'
+			}	
+		}
+    }
+}
